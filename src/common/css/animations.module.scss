@@ -7,3 +7,14 @@
   opacity: 0;
   animation: fadeIn 0.75s forwards;
 }
+
+@keyframes delayShow {
+  from { opacity: 0; }
+  to { opacity: 100; }
+}
+
+.delayShow {
+  opacity: 0;
+  animation: delayShow forwards;
+  animation-delay: 0.25s;
+}

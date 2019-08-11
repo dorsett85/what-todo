@@ -1,4 +1,11 @@
-import { SET_USER, UNSET_USER, ADD_TODO, UPDATE_TODO, DELETE_TODO } from './actions';
+import {
+  SET_USER,
+  UNSET_USER,
+  ADD_TODO,
+  UPDATE_TODO,
+  DELETE_TODO,
+  SORT_BY_DUE_DATE
+} from './actions';
 import {
   todoDueDatesToDateObject,
   sortTodosByDate
@@ -10,7 +17,7 @@ export const userReducer = (state, { type, payload }) => {
       return payload;
     }
     const todos = todoDueDatesToDateObject(payload.todos);
-    sortTodosByDate(todos);
+    sortTodosByDate(todos, state.sortByDueDateDesc);
     payload.last_login = new Date(payload.last_login);
     return { ...payload, todos };
   }
@@ -19,7 +26,7 @@ export const userReducer = (state, { type, payload }) => {
   }
   if (type === ADD_TODO) {
     const todos = todoDueDatesToDateObject([...state.todos, payload]);
-    sortTodosByDate(todos);
+    sortTodosByDate(todos, state.sortByDueDateDesc);
     return { ...state, todos };
   }
   if (type === UPDATE_TODO) {
@@ -36,13 +43,19 @@ export const userReducer = (state, { type, payload }) => {
       }
     }
     if (checkForDateSort) {
-      sortTodosByDate(todos);
+      sortTodosByDate(todos, state.sortByDueDateDesc);
     }
     return { ...state, todos };
   }
   if (type === DELETE_TODO) {
     const todos = state.todos.filter(todo => todo._id !== payload);
     return { ...state, todos };
+  }
+  if (type === SORT_BY_DUE_DATE) {
+    const sortByDueDateDesc = payload;
+    const todos = state.todos;
+    sortTodosByDate(todos, sortByDueDateDesc);
+    return { ...state, todos, sortByDueDateDesc}
   }
   return state;
 };

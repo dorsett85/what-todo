@@ -9,6 +9,7 @@ import { UserContext } from '../../context/UserContext';
 import { Api } from '../../api/Api';
 import { updateTodo, deleteTodo } from '../../context/actions';
 import styles from './todoList.module.scss';
+import { onSameDay } from '../../common/functions/dateUtils';
 
 export default function ToDoList({ handleToggleTodoModal }) {
   const {
@@ -20,17 +21,17 @@ export default function ToDoList({ handleToggleTodoModal }) {
     const dateToday = new Date(new Date().toLocaleDateString());
     return  todo.completed
       ? 'success'
-      : todo.due_date.getTime() === dateToday.getTime()
+      : onSameDay(todo.due_date, dateToday)
       ? 'warning'
       : todo.due_date < dateToday && !todo.completed
       ? 'danger'
       : undefined;
   };
 
-  const handleCompletedOnChange = todo => e => {
+  const handleCompletedOnChange = _id => e => {
     const { checked: completed } = e.target;
     Api.updateTodo({
-      body: { ...todo, completed },
+      body: { _id, completed },
       success: data => dispatch(updateTodo(data))
     });
   };
@@ -59,7 +60,7 @@ export default function ToDoList({ handleToggleTodoModal }) {
                 <Form>
                   <Form.Check
                     type='checkbox'
-                    onChange={handleCompletedOnChange(todo)}
+                    onChange={handleCompletedOnChange(todo._id)}
                     checked={!!todo.completed}
                     label='Completed'
                   />

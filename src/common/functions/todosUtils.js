@@ -13,10 +13,11 @@ export const todoDueDatesToDateObject = todos => {
 
 /**
  * Sort todo array by due date
- * 
+ *
  * @param  {Object[]} todos - Array of todo objects
+ * @param  {boolean}  desc  - Sort descending order
  * @return {Object[]}
  */
-export const sortTodosByDate = todos => {
-  return todos.sort((a, b) => a.due_date - b.due_date);
+export const sortTodosByDate = (todos, desc) => {
+  return todos.sort((a, b) => (desc ? b.due_date - a.due_date : a.due_date - b.due_date));
 };

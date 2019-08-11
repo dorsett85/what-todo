@@ -5,6 +5,7 @@ import Login from '../../routes/Login/Login';
 import TodoLanding from '../../routes/TodoLanding/TodoLanding';
 import ConditionalRoute from '../ConditionalRoute/ConditionalRoute';
 import styles from './loadApp.module.scss';
+import animations from '../../common/css/animations.module.scss';
 import { UserContext } from '../../context/UserContext';
 import { Api } from '../../api/Api';
 import { setUser } from '../../context/actions';
@@ -14,10 +15,12 @@ export default function LoadApp() {
   const [initialLoad, setInitialLoad] = useState(false);
 
   useEffect(() => {
-    Api.initialLoad(data => {
-      dispatch(setUser(data));
+    (async () => {
+      await Api.initialLoad(data => {
+        dispatch(setUser(data));
+      });
       setInitialLoad(true);
-    });
+    })();
   }, [dispatch]);
 
   return initialLoad ? (
@@ -40,7 +43,7 @@ export default function LoadApp() {
       </Switch>
     </Router>
   ) : (
-    <div className={styles.loadAppSpinner}>
+    <div className={`${styles.loadAppSpinner} ${animations.delayShow}`}>
       <Spinner animation='border' />
     </div>
   );

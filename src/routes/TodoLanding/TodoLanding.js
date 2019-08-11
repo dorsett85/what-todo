@@ -9,13 +9,15 @@ import TodoList from '../../components/TodoList/TodoList';
 import LogoutButton from '../../components/LogoutButton/LogoutButton';
 import TodoModal from '../../components/TodoModal/TodoModal';
 import animations from '../../common/css/animations.module.scss';
+import { sortByDueDate } from '../../context/actions';
 
 export default function TodoLanding() {
   const [showTodoModal, setShowTodoModal] = useState(false);
   const [modalAction, setModalAction] = useState('Add');
   const [modalData, setModalData] = useState({});
   const {
-    user: { username, last_login }
+    user: { username, last_login, sortByDueDateDesc },
+    dispatch
   } = useContext(UserContext);
 
   const handleToggleTodoModal = (action, modalData = {}) => () => {
@@ -26,16 +28,26 @@ export default function TodoLanding() {
     setShowTodoModal(!showTodoModal);
   };
 
+  const handleSortDueDateOnClick = () => {
+    dispatch(sortByDueDate(!sortByDueDateDesc));
+  };
+
   return (
     <Container className={`mt-4 ${animations.fadeIn}`}>
       <Row>
         <Col>
+          <div className='text-muted'>#WhatTodo</div>
           <Jumbotron>
             <h2>Hello {username}!</h2>
             <h6 className='mb-3'>You last logged in on {last_login.toLocaleString()}</h6>
-            <Button className='mb-2' onClick={handleToggleTodoModal('Add')}>
-              Add Todo
-            </Button>
+            <div className='mb-2'>
+              <Button className='mr-2' onClick={handleToggleTodoModal('Add')}>
+                Add Todo
+              </Button>
+              <Button variant='outline-primary' onClick={handleSortDueDateOnClick}>
+                Due Date {sortByDueDateDesc ? '⇩' : '⇧'}
+              </Button>
+            </div>
             <TodoList handleToggleTodoModal={handleToggleTodoModal} />
             <TodoModal
               action={modalAction}
