@@ -3,9 +3,11 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import styles from './login.module.scss';
+import functional from '../../common/css/functional.module.scss';
 import { Api } from '../../api/Api';
 import { UserContext } from '../../context/UserContext';
 import { setUser } from '../../context/actions';
+import githubImg from '../../common/img/GitHub-Mark-32px.png';
 
 export default function Login() {
   const { dispatch } = useContext(UserContext);
@@ -46,6 +48,10 @@ export default function Login() {
     });
   };
 
+  const handleGithubClick = () => {
+    window.open('https://github.com/dorsett85/what-todo', '_blank');
+  };
+
   return (
     <div className={`${styles.loginContainer} bg-dark`}>
       <Card className={`${styles.loginCard} ${styles.fadeInDown}`} body>
@@ -79,6 +85,9 @@ export default function Login() {
             Login
           </Button>
         </Form>
+        <div className='text-center pt-3' onClick={handleGithubClick}>
+          <img src={githubImg} className={functional.cursorPointer} alt='github-img' />
+        </div>
       </Card>
     </div>
   );
