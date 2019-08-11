@@ -1,19 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import Login from '../../routes/Login/Login';
 import TodoLanding from '../../routes/TodoLanding/TodoLanding';
 import ConditionalRoute from '../ConditionalRoute/ConditionalRoute';
 import styles from './loadApp.module.scss';
-import { AppContext } from '../../context/AppContext';
+import { UserContext } from '../../context/UserContext';
+import { Api } from '../../api/Api';
+import { setUser } from '../../context/actions';
 
 export default function LoadApp() {
-  const {
-    state: { user }
-  } = useContext(AppContext);
-  // TODO Initial fetch for user todo list
-  const initialFetch = true;
-  return initialFetch ? (
+  const { user, dispatch } = useContext(UserContext);
+  const [initialLoad, setInitialLoad] = useState(false);
+
+  useEffect(() => {
+    Api.initialLoad(data => {
+      dispatch(setUser(data));
+      setInitialLoad(true);
+    });
+  }, [dispatch]);
+
+  return initialLoad ? (
     <Router>
       <Switch>
         <ConditionalRoute

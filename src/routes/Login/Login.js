@@ -3,12 +3,14 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import styles from './login.module.scss';
-import { ajaxFetch } from '../../common/functions/ajaxFetch';
-import { AppContext } from '../../context/AppContext';
+import { Api } from '../../api/Api';
+import { UserContext } from '../../context/UserContext';
 import { setUser } from '../../context/actions';
 
 export default function Login() {
-  const { dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(UserContext);
+  const [usernameIsValid, setUsernameIsValid] = useState(false);
+  const [passwordIsValid, setPasswordIsValid] = useState(false);
   const [usernameIsInvalid, setUsernameIsInvalid] = useState(false);
   const [passwordIsInvalid, setPasswordIsInvalid] = useState(false);
 
@@ -28,8 +30,7 @@ export default function Login() {
     } = e.target;
     setUsernameIsInvalid(false);
     setPasswordIsInvalid(false);
-    ajaxFetch('/api/login', {
-      method: 'POST',
+    Api.login({
       body: { username, password },
       success: data => {
         if (!data.username) {
@@ -38,7 +39,9 @@ export default function Login() {
         if (!data.password) {
           return setPasswordIsInvalid(true);
         }
-        dispatch(setUser(data));
+        setUsernameIsValid(true);
+        setPasswordIsValid(true);
+        setTimeout(() => dispatch(setUser(data)), 500);
       }
     });
   };
@@ -46,13 +49,14 @@ export default function Login() {
   return (
     <div className={`${styles.loginContainer} bg-dark`}>
       <Card className={`${styles.loginCard} ${styles.fadeInDown}`} body>
-        <h2 className='text-center'>WhatShouldIDo?</h2>
+        <h2 className='text-center'>WhatTodo?</h2>
         <h6 className='text-center pb-3'>Your one-stop todo app!</h6>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId='username'>
             <Form.Label>Username</Form.Label>
             <Form.Control
               onInput={handleOnInput}
+              isValid={usernameIsValid}
               isInvalid={usernameIsInvalid}
               placeholder='hint, hint... clayton'
               required
@@ -64,6 +68,7 @@ export default function Login() {
             <Form.Control
               type='password'
               onInput={handleOnInput}
+              isValid={passwordIsValid}
               isInvalid={passwordIsInvalid}
               placeholder='wait for it... hcs'
               required
@@ -77,4 +82,4 @@ export default function Login() {
       </Card>
     </div>
   );
-};
+}

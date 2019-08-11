@@ -13,13 +13,13 @@
  * @returns {Promise}                      Promise returned from fetch api
  *
  * @example
- * // Sample ajax fetch from our scheduler api
- * ajaxFetch('/api/user/1', {
+ * // Sample api fetch
+ * apiFetch('/api/user/1', {
  *   success: data => console.log(data),
  *   error: err => console.log(err)
  * });
  */
-export async function ajaxFetch(
+export default async function apiFetch(
   url,
   { method, body, options = {}, success = console.log, error = console.error } = {}
 ) {

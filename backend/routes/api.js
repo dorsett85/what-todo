@@ -1,9 +1,20 @@
 const router = require('express').Router();
-const loginController = require('../controllers/login');
-const logoutController = require('../controllers/login');
+const initialLoad = require('../controllers/initialLoad');
+const login = require('../controllers/login');
+const logout = require('../controllers/logout');
+const { insertTodo, updateTodo, deleteTodo } = require('../controllers/todo');
+const checkAuthorization = require('../middleware/checkAuthorization');
 const asyncErrorHandler = require('../middleware/asyncErrorHandler');
 
-router.post('/login', asyncErrorHandler(loginController()));
-router.post('/logout', asyncErrorHandler(logoutController));
+router.get('/initialLoad', asyncErrorHandler(initialLoad()))
+router.post('/login', asyncErrorHandler(login()));
+router.post('/logout', asyncErrorHandler(logout));
+
+// Protected routes
+router.use('/todo', checkAuthorization());
+router.post('/todo', asyncErrorHandler(insertTodo()));
+router.put('/todo', asyncErrorHandler(updateTodo()));
+router.delete('/todo', asyncErrorHandler(deleteTodo()));
+
 
 module.exports = router;

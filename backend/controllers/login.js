@@ -1,16 +1,12 @@
-const jwt = require('jsonwebtoken');
-const {
-  config: { jwtSecretKey }
-} = require('../config/config');
+const UserService = require('../services/User');
 
 const login = (dependencies = {}) => async (req, res) => {
-  const { jwToken = jwt } = dependencies;
+  const { User = UserService } = dependencies;
   const { db } = req;
   const { username, password } = req.body;
 
   // Check if there's a user
-  const col = db.collection('users');
-  const user = await col.findOne({ username });
+  const user = await User.findOneJoinTodos(db, { username });
 
   // Invalid username
   if (!user) {
@@ -23,8 +19,9 @@ const login = (dependencies = {}) => async (req, res) => {
   }
 
   // Valid username and password, update last login and get the jwt token for future authorization
-  await col.updateOne({ _id: user._id }, { $set: { last_login: new Date() } });
-  const token = jwToken.sign({ id: user._id, username }, jwtSecretKey);
+  const { _id } = user;
+  await User.updateOne(db, { _id, last_login: new Date() });
+  const token = User.sign({ _id, username });
   res.cookie('jwtToken', token);
   return res.json(user);
 };

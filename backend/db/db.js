@@ -1,8 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const {
-  config: {
-    db: { connectionString }
-  }
+  db: { connectionString }
 } = require('../config/config');
 const client = new MongoClient(connectionString, {
   useNewUrlParser: true
@@ -16,4 +14,4 @@ exports.connectDb = (database = 'todo') => async callback => {
 exports.addDbToReq = (req, res, next) => {
   req.db = req.app.locals.db;
   return next();
-}
+};

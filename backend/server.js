@@ -1,10 +1,12 @@
 const express = require('express');
+var cookieParser = require('cookie-parser')
 const apiRoutes = require('./routes/api');
 const { connectDb, addDbToReq } = require('./db/db');
 
 const port = 4000;
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(addDbToReq);
 
 app.use('/api', apiRoutes);

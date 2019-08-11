@@ -1,4 +1,4 @@
-exports.config = {
+module.exports = {
   db: {
     connectionString: 'mongodb://localhost:27017'
   },
