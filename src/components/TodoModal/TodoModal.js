@@ -23,9 +23,13 @@ const TodoModal = props => {
       name: { value: name },
       due_date: { value: due_date }
     } = e.target;
+
+    // Send with utc timezone offset
+    const utcTimezoneOffset = new Date(due_date).getTimezoneOffset();
+
     if (action === 'Add') {
       Api.insertTodo({
-        body: { name, due_date },
+        body: { name, due_date, utcTimezoneOffset },
         success: data => {
           handleOnHide();
           dispatch(addTodo(data));
@@ -33,7 +37,7 @@ const TodoModal = props => {
       });
     } else if (action === 'Edit') {
       Api.updateTodo({
-        body: { _id, name, due_date },
+        body: { _id, name, due_date, utcTimezoneOffset },
         success: data => {
           handleOnHide();
           dispatch(updateTodo(data));

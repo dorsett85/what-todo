@@ -4,7 +4,7 @@ const { offsetUTCTimeZone } = require('../utils/dateUtils');
 module.exports = class Todo {
   static async insertOne(db, todo) {
     if (todo.due_date) {
-      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date));
+      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date), todo.utcTimezoneOffset);
     }
     todo.user_id = ObjectId(todo.user_id);
 
@@ -14,7 +14,7 @@ module.exports = class Todo {
 
   static async findOneAndUpdate(db, todo) {
     if (todo.due_date) {
-      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date));
+      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date), todo.utcTimezoneOffset);
     }
     if (todo.user_id) {
       todo.user_id = ObjectId(todo.user_id);
