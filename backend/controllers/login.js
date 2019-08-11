@@ -10,7 +10,7 @@ const login = (dependencies = {}) => async (req, res) => {
 
   // Invalid username
   if (!user) {
-    return res.json();
+    return res.json({});
   }
 
   // Invalid password
