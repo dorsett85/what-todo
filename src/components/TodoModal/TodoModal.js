@@ -19,13 +19,14 @@ const TodoModal = props => {
 
   const handleOnSubmit = e => {
     e.preventDefault();
-    const {
+    let {
       name: { value: name },
       due_date: { value: due_date }
     } = e.target;
 
     // Send with utc timezone offset
     const utcTimezoneOffset = new Date(due_date).getTimezoneOffset();
+    due_date = new Date(due_date);
 
     if (action === 'Add') {
       Api.insertTodo({
