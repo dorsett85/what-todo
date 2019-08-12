@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 const { jwtSecretKey } = require('../config/config');
-const { offsetUTCTimeZone } = require('../utils/dateUtils');
 
 module.exports = class User {
   static sign(user) {
