@@ -1,14 +1,13 @@
 const express = require('express');
 const path = require('path');
 var cookieParser = require('cookie-parser');
+const { connectDb } = require('./db/db');
 const apiRoutes = require('./routes/api');
-const { connectDb, addDbToReq } = require('./db/db');
 
 const port = 4000;
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(addDbToReq);
 
 app.use('/api', apiRoutes);
 
@@ -18,8 +17,7 @@ app.use('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../build/index.html'));
 });
 
-// Initialize db connection after the app starts
-connectDb()(db => {
-  app.locals.db = db;
+// Connect to the database before opening the app
+connectDb().then(() => {
   app.listen(port, () => console.log(`App listening on port ${port}!`));
 });

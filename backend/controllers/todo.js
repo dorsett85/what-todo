@@ -1,26 +1,22 @@
 const TodoService = require('../services/Todo');
 
-exports.insertTodo = (dependencies = {}) => async (req, res) => {
+exports.createTodo = (dependencies = {}) => async (req, res) => {
   const { Todo = TodoService } = dependencies;
-  const { db, _id: user_id } = req;
-
-  const {
-    ops: [newTodo]
-  } = await Todo.insertOne(db, { user_id, ...req.body });
-  return res.json(newTodo);
+  const { _id: user_id } = req;
+  const todo = await Todo.create({ user_id, ...req.body });
+  return res.json(todo);
 };
 
 exports.updateTodo = (dependencies = {}) => async (req, res) => {
   const { Todo = TodoService } = dependencies;
-  const { db, _id: user_id } = req;
-  const { value } = await Todo.findOneAndUpdate(db, { user_id, ...req.body });
+  const { _id: user_id } = req;
+  const { value } = await Todo.update({ user_id, ...req.body });
   return res.json(value);
 };
 
 exports.deleteTodo = (dependencies = {}) => async (req, res) => {
   const { Todo = TodoService } = dependencies;
-  const { db } = req;
   const { _id } = req.body;
-  await Todo.deleteOne(db, { _id });
+  await Todo.delete({ _id });
   return res.json(_id);
 };

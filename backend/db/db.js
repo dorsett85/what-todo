@@ -6,12 +6,18 @@ const client = new MongoClient(connectionString, {
   useNewUrlParser: true
 });
 
-exports.connectDb = (database = 'todo') => async callback => {
+// Define singleton db connection
+let db;
+
+exports.connectDb = async (database = 'todo') => {
   const connection = await client.connect();
-  return callback(connection.db(database));
+  db = connection.db(database);
+  return db;
 };
 
-exports.addDbToReq = (req, res, next) => {
-  req.db = req.app.locals.db;
-  return next();
+exports.getDb = () => {
+  if (!db) {
+    throw new Error('Call connectDb first!');
+  }
+  return db;
 };

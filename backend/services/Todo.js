@@ -1,38 +1,29 @@
-const { ObjectId } = require('mongodb');
+const TodoModel = require('../models/TodoModel');
 const { offsetUTCTimeZone } = require('../utils/dateUtils');
 
+const addTimezoneOffset = todo => {
+  if (todo.due_date) {
+    todo.due_date = offsetUTCTimeZone(new Date(todo.due_date), todo.utcTimezoneOffset);
+  }
+  return todo;
+};
+
 module.exports = class Todo {
-  static async insertOne(db, todo) {
-    if (todo.due_date) {
-      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date), todo.utcTimezoneOffset);
-    }
-    todo.user_id = ObjectId(todo.user_id);
-
-    const col = db.collection('todos');
-    return await col.insertOne(todo);
+  static async create(todo, TodoDb = TodoModel) {
+    addTimezoneOffset(todo);
+    const {
+      ops: [newTodo]
+    } = await TodoDb.createOne(todo);
+    return newTodo;
   }
 
-  static async findOneAndUpdate(db, todo) {
-    if (todo.due_date) {
-      todo.due_date = offsetUTCTimeZone(new Date(todo.due_date), todo.utcTimezoneOffset);
-    }
-    if (todo.user_id) {
-      todo.user_id = ObjectId(todo.user_id);
-    }
-    todo._id = ObjectId(todo._id);
+  static async update(todo, TodoDb = TodoModel) {
+    addTimezoneOffset(todo);
     const { _id, ...rest } = todo;
-
-    const col = db.collection('todos');
-    return await col.findOneAndUpdate({ _id }, { $set: rest }, { returnOriginal: false });
+    return TodoDb.updateOne({ _id }, rest);
   }
 
-  static async deleteOne(db, todo) {
-    if (todo.user_id) {
-      todo.user_id = ObjectId(todo.user_id);
-    }
-    todo._id = ObjectId(todo._id);
-
-    const col = db.collection('todos');
-    return await col.deleteOne(todo);
+  static async delete(todo, TodoDb = TodoModel) {
+    return await TodoDb.deleteOne(todo);
   }
 };

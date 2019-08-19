@@ -1,6 +1,6 @@
 const { connectDb } = require('../db');
 
-connectDb()(async db => {
+connectDb().then(async db => {
   // Drop collections
   try {
     await db.dropCollection('users');
@@ -15,7 +15,7 @@ connectDb()(async db => {
 
     // Add user
     let _id;
-    const user = { username: 'clayton', password: 'hcs', last_login: new Date() };
+    const user = { username: 'clayton', password: 'clayton', last_login: new Date() };
     const {
       ops: [record]
     } = await userCollection.insertOne(user);
@@ -50,6 +50,5 @@ connectDb()(async db => {
   } catch (err) {
     console.log(err);
   }
-
   process.exit();
 });

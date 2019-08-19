@@ -1,8 +1,7 @@
 const UserService = require('../services/User');
 
-const initialLoad = (dependencies = {}) => async (req, res) => {
+exports.initialLoad = (dependencies = {}) => async (req, res) => {
   const { User = UserService } = dependencies;
-  const { db } = req;
   const { jwtToken } = req.cookies;
 
   // Keep user object empty unless the jwt token is verified
@@ -18,8 +17,6 @@ const initialLoad = (dependencies = {}) => async (req, res) => {
   }
 
   // Token is verified, send back associated user info from the database
-  user = await User.findOneJoinTodos(db, { _id });
+  user = await User.readAndJoinTodos({ _id });
   return res.json(user);
 };
-
-module.exports = initialLoad;

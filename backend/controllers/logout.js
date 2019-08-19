@@ -1,4 +1,4 @@
-const logout = async (req, res) => {
+exports.logout = async (req, res) => {
   /**
    * TODO
    * Tag user as logged out and add timestamp for last logged in
@@ -8,5 +8,3 @@ const logout = async (req, res) => {
   res.clearCookie('jwtToken');
   return res.json({});
 };
-
-module.exports = logout;

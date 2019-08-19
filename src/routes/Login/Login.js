@@ -76,7 +76,7 @@ export default function Login() {
               onInput={handleOnInput}
               isValid={passwordIsValid}
               isInvalid={passwordIsInvalid}
-              placeholder='wait for it... hcs'
+              placeholder='wait for it... clayton'
               required
             />
             <Form.Control.Feedback type='invalid'>Invalid password</Form.Control.Feedback>
