@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 const { getDb } = require('../db/db');
 
 const addObjectId = user => {
@@ -10,6 +11,7 @@ const addObjectId = user => {
 
 module.exports = class UserModel {
   static async createOne(user, db = getDb()) {
+    user.password = await bcrypt.hash(user.password, 10);
     const col = db.collection('users');
     const date = new Date();
     const {

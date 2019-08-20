@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const { jwtSecretKey } = require('../config/config');
 const UserModel = require('../models/UserModel');
 
@@ -8,7 +9,7 @@ module.exports = class User {
   }
 
   static async verify(jwtToken) {
-    let sign;
+    let sign = {};
     try {
       sign = await jwt.verify(jwtToken, jwtSecretKey);
     } catch (err) {
@@ -65,7 +66,8 @@ module.exports = class User {
     }
 
     // Invalid password
-    if (password !== user.password) {
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
       return { username };
     }
 
