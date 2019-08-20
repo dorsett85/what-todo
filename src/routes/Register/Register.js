@@ -27,7 +27,7 @@ export default function Register({ history }) {
     Api.register({
       body: { username, password },
       success: data => {
-        if (data.exists) {
+        if (data.userExists) {
           return setUsernameIsInvalid(true);
         }
         setUsernameIsValid(true);

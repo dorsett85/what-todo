@@ -41,7 +41,7 @@ module.exports = class User {
     const userExists = await User.read({ username });
 
     if (userExists) {
-      return { exists: true };
+      return { userExists: true };
     }
 
     // Create new user and add todo property with empty array
