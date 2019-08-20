@@ -9,7 +9,22 @@ const addObjectId = user => {
 };
 
 module.exports = class UserModel {
-  static async readAndJoinTodos(user, db = getDb()) {
+  static async createOne(user, db = getDb()) {
+    const col = db.collection('users');
+    const date = new Date();
+    const {
+      ops: [newUser]
+    } = await col.insertOne({ ...user, last_login: date, created: date });
+    return newUser;
+  }
+
+  static async readOne(user, db = getDb()) {
+    addObjectId(user);
+    const col = db.collection('users');
+    return await col.findOne(user);
+  }
+
+  static async readOneAndJoinTodos(user, db = getDb()) {
     addObjectId(user);
     const col = db.collection('users');
 

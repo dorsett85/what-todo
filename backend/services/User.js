@@ -17,9 +17,45 @@ module.exports = class User {
     return sign;
   }
 
+  static async getVerified(jwtToken) {
+    let user = {};
+    if (!jwtToken) {
+      return user;
+    }
+
+    // Verify user
+    const { _id } = await User.verify(jwtToken);
+    if (!_id) {
+      return user;
+    }
+
+    // Token is verified, send back associated user info from the database
+    return await User.readAndJoinTodos({ _id });
+  }
+
+  static async register(user) {
+    const { username } = user;
+
+    // Check if user exists
+    const userExists = await User.read({ username });
+
+    if (userExists) {
+      return { exists: true };
+    }
+
+    // Create new user and add todo property with empty array
+    user = await User.create(user);
+    user.todos = [];
+    const { _id } = user;
+
+    // Get the jwt token for future authorization
+    const token = User.sign({ _id, username });
+    return { user, token };
+  }
+
   static async login(user) {
     const { username, password } = user;
-    
+
     // Check if there's a user
     user = await User.readAndJoinTodos({ username });
 
@@ -40,8 +76,16 @@ module.exports = class User {
     return { user, token };
   }
 
+  static async create(user, UserDb = UserModel) {
+    return await UserDb.createOne(user);
+  }
+
+  static async read(user, UserDb = UserModel) {
+    return await UserDb.readOne(user);
+  }
+
   static async readAndJoinTodos(user, UserDb = UserModel) {
-    return await UserDb.readAndJoinTodos(user);
+    return await UserDb.readOneAndJoinTodos(user);
   }
 
   static async updateById(user, UserDb = UserModel) {

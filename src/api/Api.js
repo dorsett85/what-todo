@@ -3,6 +3,14 @@ import apiFetch from './apiFetch';
 export class Api {
   static initialLoad = success => apiFetch('/api/initialLoad', { success });
 
+  static register({ body, success }) {
+    return apiFetch('/api/register', {
+      method: 'POST',
+      body,
+      success
+    });
+  }
+
   static login({ body, success }) {
     return apiFetch('/api/login', {
       method: 'POST',

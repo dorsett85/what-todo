@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import Login from '../../routes/Login/Login';
+import Register from '../../routes/Register/Register';
 import TodoLanding from '../../routes/TodoLanding/TodoLanding';
 import ConditionalRoute from '../ConditionalRoute/ConditionalRoute';
 import styles from './loadApp.module.scss';
@@ -30,6 +31,13 @@ export default function LoadApp() {
           exact
           path='/login'
           component={Login}
+          condition={!user._id}
+          redirect={`/user/${user._id}`}
+        />
+        <ConditionalRoute
+          exact
+          path='/register'
+          component={Register}
           condition={!user._id}
           redirect={`/user/${user._id}`}
         />

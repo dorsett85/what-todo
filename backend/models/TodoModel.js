@@ -14,7 +14,10 @@ module.exports = class TodoModel {
   static async createOne(todo, db = getDb()) {
     addObjectId(todo);
     const col = db.collection('todos');
-    return await col.insertOne(todo);
+    const {
+      ops: [newTodo]
+    } = await col.insertOne({ ...todo, created: new Date() });
+    return newTodo;
   }
 
   static async updateOne(todo, update, db = getDb()) {

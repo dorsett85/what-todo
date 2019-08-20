@@ -11,10 +11,7 @@ const addTimezoneOffset = todo => {
 module.exports = class Todo {
   static async create(todo, TodoDb = TodoModel) {
     addTimezoneOffset(todo);
-    const {
-      ops: [newTodo]
-    } = await TodoDb.createOne(todo);
-    return newTodo;
+    return await TodoDb.createOne(todo);
   }
 
   static async update(todo, TodoDb = TodoModel) {
