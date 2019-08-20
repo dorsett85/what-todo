@@ -6,12 +6,52 @@
  * @returns {string}
  */
 export function toYYYYMMDD(date, sep = '-') {
+  if (!date) {
+    date = new Date();
+  }
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
   let day = date.getDate();
   month = month > 9 ? month : '0' + month;
   day = day > 9 ? day : '0' + day;
   return [year, month, day].join(sep);
+};
+
+/**
+ * Convert date to HH:MM AM/PM string format 
+ * @param   {Date} date
+ * @returns {string} 
+ */
+export function toHHMM(date) {
+  if (!date) {
+    date = new Date();
+    date.setMinutes(0);
+  }
+  return date.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  });
+}
+
+/**
+ * Generate array of strings formatted to HH:MM AM/PM at 15 minute intervals
+ * @return {string[]}
+ */
+export const generateTime15MinSteps = () => {
+  const times = [];
+  const date = new Date(new Date().toDateString());
+  const day = date.getDate();
+  while (day === date.getDate()) {
+    const timeDay = date.toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
+    times.push(timeDay);
+    date.setMinutes(date.getMinutes() + 15);
+  }
+  return times;
 };
 
 /**

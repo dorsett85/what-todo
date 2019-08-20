@@ -43,7 +43,9 @@ export default function Register({ history }) {
 
   return (
     <EntryPage>
-    <h2 className='text-center'>WhatTodo?</h2>
+    <h2 className='text-center'>
+      <strong>WhatTodo?</strong>
+    </h2>
     <h6 className='text-center pb-3'>Create Account</h6>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId='username'>

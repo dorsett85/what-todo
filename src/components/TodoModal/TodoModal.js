@@ -1,11 +1,19 @@
 import React, { memo, useContext } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { Api } from '../../api/Api';
 import { UserContext } from '../../context/UserContext';
 import { addTodo, updateTodo } from '../../context/actions';
-import { toYYYYMMDD } from '../../common/functions/dateUtils';
+import { generateTime15MinSteps, toYYYYMMDD, toHHMM } from '../../common/functions/dateUtils';
+
+const timeOptions = generateTime15MinSteps().map(time => (
+  <option key={time} value={time}>
+    {time}
+  </option>
+));
 
 const TodoModal = props => {
   const { dispatch } = useContext(UserContext);
@@ -15,14 +23,17 @@ const TodoModal = props => {
     modalData: { _id, name, due_date },
     ...rest
   } = props;
-  const defaultDate = toYYYYMMDD(due_date || new Date());
+  const defaultDate = toYYYYMMDD(due_date);
+  const defaultTime = toHHMM(due_date);
 
   const handleOnSubmit = e => {
     e.preventDefault();
-    const {
+    let {
       name: { value: name },
-      due_date: { value: due_date }
+      due_date: { value: due_date },
+      due_time: { value: due_time }
     } = e.target;
+    due_date = new Date(due_date + ' ' + due_time);
 
     // Send with utc timezone offset
     const utcTimezoneOffset = new Date(due_date).getTimezoneOffset();
@@ -54,14 +65,28 @@ const TodoModal = props => {
       <Modal.Body>
         <Form onSubmit={handleOnSubmit}>
           <Form.Group controlId='name'>
-            <Form.Label>What do you need to do?</Form.Label>
+            <Form.Label>
+              <b>What do you need to do?</b>
+            </Form.Label>
             <Form.Control placeholder='Todo name' defaultValue={name} required />
           </Form.Group>
-
-          <Form.Group controlId='due_date'>
-            <Form.Label>Due Date</Form.Label>
-            <Form.Control type='date' defaultValue={defaultDate} required />
-          </Form.Group>
+          <Form.Label>
+            <b>When's it due?</b>
+          </Form.Label>
+          <Row>
+            <Col sm={6}>
+              <Form.Group controlId='due_date'>
+                <Form.Control type='date' defaultValue={defaultDate} required />
+              </Form.Group>
+            </Col>
+            <Col sm={6}>
+              <Form.Group controlId='due_time'>
+                <Form.Control as='select' defaultValue={defaultTime}>
+                  {timeOptions}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
           <Button variant='success' type='submit'>
             {action}
           </Button>

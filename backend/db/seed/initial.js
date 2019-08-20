@@ -22,6 +22,8 @@ connectDb().then(async db => {
 
     // Add todos
     const due_date = new Date();
+    due_date.setHours(12)
+    due_date.setMinutes(0);
     due_date.setDate(due_date.getDate() + 1);
     const todos = [
       {

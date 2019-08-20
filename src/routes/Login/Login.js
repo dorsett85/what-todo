@@ -49,7 +49,7 @@ export default function Login({ history }) {
 
   const handleToRegisterClick = () => {
     history.push('/register');
-  }
+  };
 
   const handleGithubClick = () => {
     window.open('https://github.com/dorsett85/what-todo', '_blank');
@@ -57,7 +57,9 @@ export default function Login({ history }) {
 
   return (
     <EntryPage>
-      <h2 className='text-center'>WhatTodo?</h2>
+      <h2 className='text-center'>
+        <strong>WhatTodo?</strong>
+      </h2>
       <h6 className='text-center pb-3'>Your one-stop todo app!</h6>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId='username'>
