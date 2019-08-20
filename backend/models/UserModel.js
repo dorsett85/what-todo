@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { getDb } = require('../db/db');
 
 const addObjectId = user => {
-  if (user._id) {
+  if (user._id && typeof user._id === 'string') {
     user._id = ObjectId(user._id);
   }
   return user;

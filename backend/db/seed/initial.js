@@ -1,4 +1,6 @@
 const { connectDb } = require('../db');
+const UserModel = require('../../models/UserModel');
+const TodoModel = require('../../models/TodoModel');
 
 connectDb().then(async db => {
   // Drop collections
@@ -10,19 +12,15 @@ connectDb().then(async db => {
   }
 
   try {
-    const userCollection = db.collection('users');
-    const todoCollection = db.collection('todos');
-
     // Add user
-    let _id;
-    const user = { username: 'clayton', password: 'clayton', last_login: new Date() };
-    const {
-      ops: [record]
-    } = await userCollection.insertOne(user);
-    _id = record._id;
+    const user = await UserModel.createOne({
+      username: 'clayton',
+      password: 'clayton',
+      last_login: new Date()
+    });
+    const { _id: user_id } = user;
 
     // Add todos
-    const user_id = _id;
     const due_date = new Date();
     due_date.setDate(due_date.getDate() + 1);
     const todos = [
@@ -45,7 +43,7 @@ connectDb().then(async db => {
         completed: true
       }
     ];
-    await todoCollection.insertMany(todos);
+    await TodoModel.createMany(todos);
     console.log('Success! Database seeded with test user and todos');
   } catch (err) {
     console.log(err);
