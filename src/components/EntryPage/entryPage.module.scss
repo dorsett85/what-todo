@@ -1,0 +1,26 @@
+.entryContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.entryCard {
+  margin: 1em;
+  width: 400px;
+}
+
+@keyframes fadeInDown {
+  from {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50px);
+    opacity: 100;
+  }
+}
+
+.fadeInDown {
+  animation: fadeInDown 1s forwards;
+}
