@@ -15,12 +15,13 @@ export function toYYYYMMDD(date, sep = '-') {
   month = month > 9 ? month : '0' + month;
   day = day > 9 ? day : '0' + day;
   return [year, month, day].join(sep);
-};
+}
 
 /**
- * Convert date to HH:MM AM/PM string format 
+ * Convert date to HH:MM AM/PM string format
+ * 
  * @param   {Date} date
- * @returns {string} 
+ * @returns {string}
  */
 export function toHHMM(date) {
   if (!date) {
@@ -36,7 +37,8 @@ export function toHHMM(date) {
 
 /**
  * Generate array of strings formatted to HH:MM AM/PM at 15 minute intervals
- * @return {string[]}
+ * 
+ * @returns {string[]}
  */
 export const generateTime15MinSteps = () => {
   const times = [];
