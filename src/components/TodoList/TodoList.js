@@ -9,7 +9,7 @@ import { UserContext } from '../../context/UserContext';
 import { Api } from '../../api/Api';
 import { updateTodo, deleteTodo } from '../../context/actions';
 import styles from './todoList.module.scss';
-import { onSameDay } from '../../common/functions/dateUtils';
+import { onSameDay, toHHMM } from '../../common/functions/dateUtils';
 
 export default function ToDoList({ handleToggleTodoModal }) {
   const {
@@ -19,7 +19,7 @@ export default function ToDoList({ handleToggleTodoModal }) {
 
   const todoStatus = todo => {
     const dateToday = new Date(new Date().toLocaleDateString());
-    return  todo.completed
+    return todo.completed
       ? 'success'
       : onSameDay(todo.due_date, dateToday)
       ? 'warning'
@@ -41,8 +41,8 @@ export default function ToDoList({ handleToggleTodoModal }) {
     Api.deleteTodo({
       body: { _id },
       success: data => dispatch(deleteTodo(data))
-    })
-  }
+    });
+  };
 
   return (
     !!todos.length && (
@@ -54,7 +54,8 @@ export default function ToDoList({ handleToggleTodoModal }) {
             </div>
             <Row className='d-flex align-items-center'>
               <Col>
-                <b>Due Date</b>: {todo.due_date.toLocaleDateString()}
+                <b>Due</b>:{' '}
+                {todo.due_date.toLocaleDateString() + ' ' + toHHMM(todo.due_date)}
               </Col>
               <Col>
                 <Form>
@@ -69,8 +70,19 @@ export default function ToDoList({ handleToggleTodoModal }) {
               <Col>
                 <div className='d-flex flex-column'>
                   <ButtonGroup>
-                    <Button variant='outline-dark' onClick={handleToggleTodoModal('Edit', todo)}>Edit</Button>
-                    <Button variant='outline-danger' onClick={handleDeleteOnClick} value={todo._id}>Remove</Button>
+                    <Button
+                      variant='outline-dark'
+                      onClick={handleToggleTodoModal('Edit', todo)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant='outline-danger'
+                      onClick={handleDeleteOnClick}
+                      value={todo._id}
+                    >
+                      Remove
+                    </Button>
                   </ButtonGroup>
                 </div>
               </Col>
