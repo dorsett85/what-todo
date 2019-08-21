@@ -2,14 +2,14 @@ import React, { useContext } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 import { UserContext } from '../../context/UserContext';
 import { Api } from '../../api/Api';
 import { updateTodo, deleteTodo } from '../../context/actions';
 import styles from './todoList.module.scss';
-import { onSameDay, toHHMM } from '../../common/functions/dateUtils';
+import { onSameDay } from '../../common/functions/dateUtils';
 
 export default function ToDoList({ handleToggleTodoModal }) {
   const {
@@ -18,18 +18,20 @@ export default function ToDoList({ handleToggleTodoModal }) {
   } = useContext(UserContext);
 
   const todoStatus = todo => {
-    const dateToday = new Date(new Date().toLocaleDateString());
+    const dateNow = new Date();
+    const dateToday = new Date(dateNow.toLocaleDateString());
     return todo.completed
-      ? 'success'
+      ? 'text-success'
+      : todo.due_date < dateNow
+      ? 'text-danger'
       : onSameDay(todo.due_date, dateToday)
-      ? 'warning'
-      : todo.due_date < dateToday && !todo.completed
-      ? 'danger'
+      ? 'text-warning'
       : undefined;
   };
 
-  const handleCompletedOnChange = _id => e => {
-    const { checked: completed } = e.target;
+  const handleCompletedOnChange = todo => e => {
+    const { _id } = todo;
+    const completed = !todo.completed;
     Api.updateTodo({
       body: { _id, completed },
       success: data => dispatch(updateTodo(data))
@@ -48,28 +50,32 @@ export default function ToDoList({ handleToggleTodoModal }) {
     !!todos.length && (
       <ListGroup>
         {todos.map(todo => (
-          <ListGroup.Item key={todo._id} variant={todoStatus(todo)}>
-            <div className='lead'>
+          <ListGroup.Item key={todo._id}>
+            <div className={`lead pb-1 ${todoStatus(todo)}`}>
               <span className={styles.itemName}>{todo.name}</span>
             </div>
             <Row className='d-flex align-items-center'>
-              <Col>
-                <b>Due</b>:{' '}
-                {todo.due_date.toLocaleDateString() + ' ' + toHHMM(todo.due_date)}
+              <Col xs={2} sm={4}>
+                <Badge
+                  className={`mb-2 mb-sm-0 ${styles.completedBadge}`}
+                  variant={!!todo.completed ? 'success' : 'light'}
+                  onClick={handleCompletedOnChange(todo)}
+                >
+                  ✓
+                </Badge>
               </Col>
               <Col>
-                <Form>
-                  <Form.Check
-                    type='checkbox'
-                    onChange={handleCompletedOnChange(todo._id)}
-                    checked={!!todo.completed}
-                    label='Completed'
-                  />
-                </Form>
+                <div className={`mb-2 mb-sm-0 ${todoStatus(todo)}`}>
+                  <b>Due</b>:{' '}
+                  {todo.due_date.toLocaleDateString('en-us', {
+                    dateStyle: 'short',
+                    timeStyle: 'short'
+                  })}
+                </div>
               </Col>
-              <Col>
+              <Col xs={12} sm={4}>
                 <div className='d-flex flex-column'>
-                  <ButtonGroup>
+                  <ButtonGroup size='sm'>
                     <Button
                       variant='outline-dark'
                       onClick={handleToggleTodoModal('Edit', todo)}

@@ -19,7 +19,7 @@ export function toYYYYMMDD(date, sep = '-') {
 
 /**
  * Convert date to HH:MM AM/PM string format
- * 
+ *
  * @param   {Date} date
  * @returns {string}
  */
@@ -28,16 +28,12 @@ export function toHHMM(date) {
     date = new Date();
     date.setMinutes(0);
   }
-  return date.toLocaleString('en-US', {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  });
+  return date.toLocaleString('en-US', { timeStyle: 'short' });
 }
 
 /**
  * Generate array of strings formatted to HH:MM AM/PM at 15 minute intervals
- * 
+ *
  * @returns {string[]}
  */
 export const generateTime15MinSteps = () => {
@@ -45,11 +41,7 @@ export const generateTime15MinSteps = () => {
   const date = new Date(new Date().toDateString());
   const day = date.getDate();
   while (day === date.getDate()) {
-    const timeDay = date.toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    });
+    const timeDay = toHHMM(date);
     times.push(timeDay);
     date.setMinutes(date.getMinutes() + 15);
   }

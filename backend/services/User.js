@@ -19,19 +19,19 @@ module.exports = class User {
   }
 
   static async getVerified(jwtToken) {
-    let user = {};
+    const noUser = {};
     if (!jwtToken) {
-      return user;
+      return noUser;
     }
 
     // Verify user
     const { _id } = await User.verify(jwtToken);
     if (!_id) {
-      return user;
+      return noUser;
     }
 
     // Token is verified, send back associated user info from the database
-    return await User.readAndJoinTodos({ _id });
+    return await User.readAndJoinTodos({ _id }) || noUser;
   }
 
   static async register(user) {
@@ -62,13 +62,13 @@ module.exports = class User {
 
     // Invalid username
     if (!user) {
-      return {};
+      return { user: {} };
     }
 
     // Invalid password
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {
-      return { username };
+      return { user: { username } };
     }
 
     // Valid username and password, update last login and get the jwt token for future authorization

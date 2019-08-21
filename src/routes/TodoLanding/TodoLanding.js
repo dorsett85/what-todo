@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Jumbotron from 'react-bootstrap/Jumbotron';
+import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import { UserContext } from '../../context/UserContext';
 import TodoList from '../../components/TodoList/TodoList';
@@ -16,9 +17,11 @@ export default function TodoLanding() {
   const [modalAction, setModalAction] = useState('Add');
   const [modalData, setModalData] = useState({});
   const {
-    user: { username, last_login, sortByDueDateDesc },
+    user: { username, last_login, sortByDueDateDesc, todos },
     dispatch
   } = useContext(UserContext);
+
+  const completedTodos = todos.filter(todo => todo.completed).length;
 
   const handleToggleTodoModal = (action, modalData = {}) => () => {
     if (action) {
@@ -39,7 +42,24 @@ export default function TodoLanding() {
           <div className='text-muted'>#WhatTodo</div>
           <Jumbotron>
             <h2>Hello {username}!</h2>
-            <h6 className='mb-3'>You last logged in on {last_login.toLocaleString()}</h6>
+            <h6>
+              You last logged in on{' '}
+              {last_login.toLocaleDateString('en-us', {
+                dateStyle: 'short',
+                timeStyle: 'short'
+              })}
+            </h6>
+            {!!todos.length && (
+              <div className='mb-2'>
+                <Badge
+                  variant={completedTodos === todos.length ? 'success' : 'dark'}
+                  pill
+                >
+                  {completedTodos}/{todos.length}
+                </Badge>{' '}
+                completed todos
+              </div>
+            )}
             <div className='mb-2'>
               <Button className='mr-2' onClick={handleToggleTodoModal('Add')}>
                 Add Todo
