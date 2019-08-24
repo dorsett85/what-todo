@@ -13,7 +13,7 @@ router.post('/login', asyncErrorHandler(login()));
 router.post('/logout', asyncErrorHandler(logout));
 
 // Protected routes
-router.use('/todo', checkAuthorization());
+router.use('/todo', asyncErrorHandler(checkAuthorization()));
 router.post('/todo', asyncErrorHandler(createTodo()));
 router.put('/todo', asyncErrorHandler(updateTodo()));
 router.delete('/todo', asyncErrorHandler(deleteTodo()));
