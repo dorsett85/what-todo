@@ -1,29 +1,38 @@
-## WhatTodo!
+# WhatTodo!
 
 Live demo at https://what-todo.cphillipsdorsett.com
 
 Basic todo app created with the MERN stack (mongodb, express, react, node).  Frontend state management provided by the react context api.
 
-#### Getting started
+## setup
 
-Requires running local mongodb connection on port 27017.
+Required software
+1. node 12
+2. mongodb
+
+### production setup (ssh'd into server as sudo root user 'clayton')
+
+Required software (in addition to those required below the initial setup)
+1. nginx
 
 ```bash
-git clone git@github.com:dorsett85/what-todo
+cd /var/www/
+sudo git clone git@github.com:dorsett85/what-todo
+sudo chown -R clayton:clayton what-todo/
 cd what-todo/
-npm install
-npm run seed
 
-###### Run with webpack-dev-server #####
-npm run server
-
-# Open new terminal in the same directory
-npm start
-
-##### Run with production build #####
-npm run build
-npm run server # Open browser at localhost:4000
+# Build frontend
+npm i
+npm run build 
 ```
+
+Next up we'll follow the tutorial at this link (starting from "Creating Unit Files", and update the .service file appropriately):
+
+https://rollout.io/blog/running-node-js-linux-systemd/
+
+And last, use this tutorial for setting up nginx (starting from "Step 4 — Setting Up Nginx as a Reverse Proxy Server"):
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-20-04
 
 #### Design
 
