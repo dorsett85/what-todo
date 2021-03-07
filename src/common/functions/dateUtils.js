@@ -28,7 +28,7 @@ export function toHHMM(date) {
     date = new Date();
     date.setMinutes(0);
   }
-  return date.toLocaleString('en-US', { timeStyle: 'short' });
+  return date.toLocaleString('en-us', { hour: 'numeric', minute: 'numeric' });
 }
 
 /**

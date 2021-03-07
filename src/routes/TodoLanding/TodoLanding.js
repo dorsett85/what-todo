@@ -45,8 +45,8 @@ export default function TodoLanding() {
             <h6>
               You last logged in on{' '}
               {last_login.toLocaleDateString('en-us', {
-                dateStyle: 'short',
-                timeStyle: 'short'
+                hour: 'numeric',
+                minute: 'numeric'
               })}
             </h6>
             {!!todos.length && (

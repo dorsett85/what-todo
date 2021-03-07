@@ -68,8 +68,8 @@ export default function ToDoList({ handleToggleTodoModal }) {
                 <div className={`mb-2 mb-sm-0 ${todoStatus(todo)}`}>
                   <b>Due</b>:{' '}
                   {todo.due_date.toLocaleDateString('en-us', {
-                    dateStyle: 'short',
-                    timeStyle: 'short'
+                    hour: 'numeric',
+                    minute: 'numeric'
                   })}
                 </div>
               </Col>
